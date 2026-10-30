@@ -1,0 +1,58 @@
+name: Deploy Capy Planet ZIP
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'capy-planet-github-clean-001.zip'
+      - '.github/workflows/deploy-pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Extract website
+        run: |
+          mkdir -p _site
+          python3 - <<'PY'
+          from pathlib import Path
+          import stat
+          import zipfile
+
+          root = Path("_site").resolve()
+          with zipfile.ZipFile("capy-planet-github-clean-001.zip") as archive:
+              for item in archive.infolist():
+                  target = (root / item.filename).resolve()
+                  if not target.is_relative_to(root):
+                      raise ValueError("Invalid ZIP path")
+                  if stat.S_ISLNK(item.external_attr >> 16):
+                      raise ValueError("Links are not supported")
+              archive.extractall(root)
+          if not (root / "index.html").is_file():
+              raise ValueError("index.html missing from ZIP root")
+          print("Website extracted successfully")
+          PY
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      - name: Upload website
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+      - name: Deploy website
+        id: deployment
+        uses: actions/deploy-pages@v4
