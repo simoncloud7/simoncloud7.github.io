@@ -9,6 +9,7 @@ on:
       - 'robots.txt'
       - 'sitemap.xml'
       - 'about.html'
+      - 'googlebb9735832da71bd0.html'
   workflow_dispatch:
 
 permissions:
@@ -52,7 +53,7 @@ jobs:
           PY
       - name: Add SEO files without changing game
         run: |
-          cp robots.txt sitemap.xml about.html _site/
+          cp robots.txt sitemap.xml about.html googlebb9735832da71bd0.html _site/
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload website
