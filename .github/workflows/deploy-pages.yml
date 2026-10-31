@@ -6,6 +6,9 @@ on:
     paths:
       - 'capy-planet-github-clean-001.zip'
       - '.github/workflows/deploy-pages.yml'
+      - 'robots.txt'
+      - 'sitemap.xml'
+      - 'about.html'
   workflow_dispatch:
 
 permissions:
@@ -47,6 +50,9 @@ jobs:
               raise ValueError("index.html missing from ZIP root")
           print("Website extracted successfully")
           PY
+      - name: Add SEO files without changing game
+        run: |
+          cp robots.txt sitemap.xml about.html _site/
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload website
