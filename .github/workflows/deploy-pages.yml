@@ -8,6 +8,7 @@ on:
       - '.github/workflows/deploy-pages.yml'
       - 'robots.txt'
       - 'sitemap.xml'
+      - 'sitemap-v2.xml'
       - 'about.html'
       - 'googlebb9735832da71bd0.html'
   workflow_dispatch:
@@ -53,7 +54,7 @@ jobs:
           PY
       - name: Add SEO files without changing game
         run: |
-          cp robots.txt sitemap.xml about.html googlebb9735832da71bd0.html _site/
+          cp robots.txt sitemap.xml sitemap-v2.xml about.html googlebb9735832da71bd0.html _site/
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload website
